@@ -5,39 +5,73 @@
     // ==========================================
 
 
-    // Get the saved number from this browser/device
-    const savedNumber = localStorage.getItem("kovelaGeneratedNumber");
+    // ==========================================
+    // ADD DISABLED BUTTON STYLE
+    // ==========================================
 
+    const style = document.createElement("style");
 
-    // Get the page elements
-    const numberElement = document.getElementById("number");
-    const qrCode = document.getElementById("qrCode");
-    const generateButton = document.getElementById("generateButton");
+    style.textContent = `
+        button:disabled {
+            background: #999 !important;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+    `;
+
+    document.head.appendChild(style);
 
 
     // ==========================================
-    // IF QR WAS ALREADY GENERATED
+    // GET SAVED NUMBER
+    // ==========================================
+
+    const savedNumber =
+        localStorage.getItem("kovelaGeneratedNumber");
+
+
+    // ==========================================
+    // GET PAGE ELEMENTS
+    // ==========================================
+
+    const numberElement =
+        document.getElementById("number");
+
+    const qrCode =
+        document.getElementById("qrCode");
+
+    const generateButton =
+        document.getElementById("generateButton");
+
+
+    // ==========================================
+    // CHECK IF QR WAS ALREADY GENERATED
     // ==========================================
 
     if (savedNumber !== null) {
 
-        // Show the previously generated number
-        numberElement.textContent = savedNumber;
+        // Show previously generated number
+        numberElement.textContent =
+            savedNumber;
 
 
-        // Create the QR code again
+        // Create QR code URL
         const qrUrl =
             "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
             + encodeURIComponent(savedNumber);
 
 
-        // Display the QR code
+        // Display QR code
         qrCode.src = qrUrl;
-        qrCode.style.display = "block";
+
+        qrCode.style.display =
+            "block";
 
 
-        // Disable the Generate QR button
-        generateButton.disabled = true;
+        // Disable button
+        generateButton.disabled =
+            true;
 
         generateButton.textContent =
             "QR Already Generated";
@@ -51,12 +85,18 @@
 
     function generateQR() {
 
-        // Check if this device has already generated a QR
+
+        // ==========================================
+        // CHECK AGAIN
+        // ==========================================
+
         const existingNumber =
-            localStorage.getItem("kovelaGeneratedNumber");
+            localStorage.getItem(
+                "kovelaGeneratedNumber"
+            );
 
 
-        // If already generated, stop
+        // If QR already exists, stop
         if (existingNumber !== null) {
 
             return;
@@ -73,7 +113,7 @@
 
 
         // ==========================================
-        // SAVE NUMBER TO THIS DEVICE/BROWSER
+        // SAVE NUMBER
         // ==========================================
 
         localStorage.setItem(
@@ -86,7 +126,8 @@
         // DISPLAY NUMBER
         // ==========================================
 
-        numberElement.textContent = randomNumber;
+        numberElement.textContent =
+            randomNumber;
 
 
         // ==========================================
@@ -98,19 +139,23 @@
             + encodeURIComponent(randomNumber);
 
 
-        // Set QR image
-        qrCode.src = qrUrl;
+        // ==========================================
+        // DISPLAY QR CODE
+        // ==========================================
 
+        qrCode.src =
+            qrUrl;
 
-        // Show QR image
-        qrCode.style.display = "block";
+        qrCode.style.display =
+            "block";
 
 
         // ==========================================
         // DISABLE BUTTON
         // ==========================================
 
-        generateButton.disabled = true;
+        generateButton.disabled =
+            true;
 
         generateButton.textContent =
             "QR Already Generated";
