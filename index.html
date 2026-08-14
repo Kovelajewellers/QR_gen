@@ -1,165 +1,298 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
 
-    // ==========================================
-    // KOVELA JEWELLERS - ONE QR PER DEVICE
-    // ==========================================
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kovela Jewellers - QR Generator</title>
 
 
-    // ==========================================
-    // ADD DISABLED BUTTON STYLE
-    // ==========================================
+    <style>
 
-    const style = document.createElement("style");
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
 
-    style.textContent = `
-        button:disabled {
-            background: #999 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+
+        .container {
+            background: white;
+
+            width: 320px;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+
+        .description {
+            color: #555;
+        }
+
+
+        #number {
+            font-size: 60px;
+
+            font-weight: bold;
+
+            margin: 25px 0;
+        }
+
+
+        #qrCode {
+            width: 250px;
+
+            height: 250px;
+
+            display: none;
+
+            margin: 20px auto;
+        }
+
+
+        button {
+            background: #007bff;
+
             color: white;
+
+            border: none;
+
+            padding: 14px 25px;
+
+            font-size: 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+
+        button:hover {
+            background: #0056b3;
+        }
+
+
+        /* Disabled button */
+
+        button:disabled {
+            background: #999;
+
+            color: white;
+
             cursor: not-allowed;
+
             opacity: 0.8;
         }
-    `;
 
-    document.head.appendChild(style);
+    </style>
 
-
-    // ==========================================
-    // GET SAVED NUMBER
-    // ==========================================
-
-    const savedNumber =
-        localStorage.getItem("kovelaGeneratedNumber");
+</head>
 
 
-    // ==========================================
-    // GET PAGE ELEMENTS
-    // ==========================================
-
-    const numberElement =
-        document.getElementById("number");
-
-    const qrCode =
-        document.getElementById("qrCode");
-
-    const generateButton =
-        document.getElementById("generateButton");
+<body>
 
 
-    // ==========================================
-    // CHECK IF QR WAS ALREADY GENERATED
-    // ==========================================
+    <div class="container">
 
-    if (savedNumber !== null) {
+        <h1>Kovela Jewellers</h1>
 
-        // Show previously generated number
-        numberElement.textContent =
-            savedNumber;
+        <p class="description">
+            Generate your random number
+        </p>
 
 
-        // Create QR code URL
-        const qrUrl =
-            "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
-            + encodeURIComponent(savedNumber);
+        <div id="number">?</div>
 
 
-        // Display QR code
-        qrCode.src = qrUrl;
-
-        qrCode.style.display =
-            "block";
-
-
-        // Disable button
-        generateButton.disabled =
-            true;
-
-        generateButton.textContent =
-            "QR Already Generated";
-
-    }
+        <img
+            id="qrCode"
+            alt="QR Code"
+        >
 
 
-    // ==========================================
-    // GENERATE QR FUNCTION
-    // ==========================================
+        <button
+            id="generateButton"
+            onclick="generateQR()"
+        >
+            Generate QR
+        </button>
 
-    function generateQR() {
+    </div>
+
+
+
+    <script>
 
 
         // ==========================================
-        // CHECK AGAIN
+        // KOVELA JEWELLERS
+        // ONE QR PER BROWSER / DEVICE
         // ==========================================
 
-        const existingNumber =
-            localStorage.getItem(
-                "kovelaGeneratedNumber"
+
+        // Get saved number from this browser
+        const savedNumber =
+            localStorage.getItem("kovelaGeneratedNumber");
+
+
+        // Get page elements
+        const numberElement =
+            document.getElementById("number");
+
+        const qrCode =
+            document.getElementById("qrCode");
+
+        const generateButton =
+            document.getElementById("generateButton");
+
+
+
+        // ==========================================
+        // IF NUMBER WAS ALREADY GENERATED
+        // ==========================================
+
+        if (savedNumber !== null) {
+
+
+            // Show saved number
+            numberElement.textContent =
+                savedNumber;
+
+
+            // Create QR code
+            const qrUrl =
+                "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+                + encodeURIComponent(savedNumber);
+
+
+            // Show QR
+            qrCode.src = qrUrl;
+
+            qrCode.style.display =
+                "block";
+
+
+            // Disable button
+            generateButton.disabled =
+                true;
+
+
+            generateButton.textContent =
+                "QR Already Generated";
+
+        }
+
+
+
+        // ==========================================
+        // GENERATE QR
+        // ==========================================
+
+        function generateQR() {
+
+
+            // Check again
+            const existingNumber =
+                localStorage.getItem(
+                    "kovelaGeneratedNumber"
+                );
+
+
+            // Already generated
+            if (existingNumber !== null) {
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // RANDOM NUMBER 0 - 19
+            // ==========================================
+
+            const randomNumber =
+                Math.floor(Math.random() * 20);
+
+
+
+            // ==========================================
+            // SAVE NUMBER
+            // ==========================================
+
+            localStorage.setItem(
+                "kovelaGeneratedNumber",
+                randomNumber
             );
 
 
-        // If QR already exists, stop
-        if (existingNumber !== null) {
 
-            return;
+            // ==========================================
+            // DISPLAY NUMBER
+            // ==========================================
+
+            numberElement.textContent =
+                randomNumber;
+
+
+
+            // ==========================================
+            // CREATE QR CODE
+            // ==========================================
+
+            const qrUrl =
+                "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+                + encodeURIComponent(randomNumber);
+
+
+
+            // ==========================================
+            // DISPLAY QR CODE
+            // ==========================================
+
+            qrCode.src =
+                qrUrl;
+
+            qrCode.style.display =
+                "block";
+
+
+
+            // ==========================================
+            // DISABLE BUTTON
+            // ==========================================
+
+            generateButton.disabled =
+                true;
+
+            generateButton.textContent =
+                "QR Already Generated";
 
         }
 
 
-        // ==========================================
-        // GENERATE RANDOM NUMBER 0 - 19
-        // ==========================================
-
-        const randomNumber =
-            Math.floor(Math.random() * 20);
+    </script>
 
 
-        // ==========================================
-        // SAVE NUMBER
-        // ==========================================
+</body>
 
-        localStorage.setItem(
-            "kovelaGeneratedNumber",
-            randomNumber
-        );
-
-
-        // ==========================================
-        // DISPLAY NUMBER
-        // ==========================================
-
-        numberElement.textContent =
-            randomNumber;
-
-
-        // ==========================================
-        // CREATE QR CODE
-        // ==========================================
-
-        const qrUrl =
-            "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
-            + encodeURIComponent(randomNumber);
-
-
-        // ==========================================
-        // DISPLAY QR CODE
-        // ==========================================
-
-        qrCode.src =
-            qrUrl;
-
-        qrCode.style.display =
-            "block";
-
-
-        // ==========================================
-        // DISABLE BUTTON
-        // ==========================================
-
-        generateButton.disabled =
-            true;
-
-        generateButton.textContent =
-            "QR Already Generated";
-
-    }
-
-</script>
+</html>
