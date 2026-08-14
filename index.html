@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kovela Jewellers - Random QR</title>
+    <title>Kovela Jewellers - QR Generator</title>
 
     <style>
 
@@ -99,10 +99,7 @@
 
         <div id="number">?</div>
 
-        <img
-            id="qrCode"
-            alt="QR Code"
-        >
+        <img id="qrCode" alt="QR Code">
 
         <button onclick="generateQR()">
             Generate QR
@@ -116,12 +113,14 @@
         function generateQR() {
 
             // Get numbers already used on this browser/device
+
             let usedNumbers = JSON.parse(
                 localStorage.getItem("usedNumbers")
             ) || [];
 
 
-            // If all 20 numbers have been used
+            // Check if all 20 numbers have been used
+
             if (usedNumbers.length >= 20) {
 
                 alert(
@@ -132,7 +131,8 @@
             }
 
 
-            // Create list of numbers that have NOT been used
+            // Find numbers that have not been used
+
             let availableNumbers = [];
 
             for (let i = 0; i < 20; i++) {
@@ -146,7 +146,8 @@
             }
 
 
-            // Pick a random number from available numbers
+            // Pick a random unused number
+
             const randomIndex = Math.floor(
                 Math.random() * availableNumbers.length
             );
@@ -155,7 +156,8 @@
                 availableNumbers[randomIndex];
 
 
-            // Save number as used
+            // Save this number as used
+
             usedNumbers.push(randomNumber);
 
             localStorage.setItem(
@@ -165,17 +167,20 @@
 
 
             // Display the number
+
             document.getElementById("number").textContent =
                 randomNumber;
 
 
             // Create QR code
+
             const qrUrl =
                 "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
                 + encodeURIComponent(randomNumber);
 
 
             // Display QR code
+
             const qrCode =
                 document.getElementById("qrCode");
 
