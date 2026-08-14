@@ -1,0 +1,72 @@
+<script>
+
+function generateQR() {
+
+    // Get previously used numbers from this device/browser
+    let usedNumbers = JSON.parse(
+        localStorage.getItem("usedNumbers")
+    ) || [];
+
+
+    // Check if all 20 numbers have already been used
+    if (usedNumbers.length >= 20) {
+
+        alert("All numbers from 0 to 19 have already been used on this device.");
+
+        return;
+    }
+
+
+    // Create a list of numbers that have NOT been used
+    let availableNumbers = [];
+
+    for (let i = 0; i < 20; i++) {
+
+        if (!usedNumbers.includes(i)) {
+
+            availableNumbers.push(i);
+
+        }
+
+    }
+
+
+    // Pick a random number from the available numbers
+    const randomIndex = Math.floor(
+        Math.random() * availableNumbers.length
+    );
+
+    const randomNumber = availableNumbers[randomIndex];
+
+
+    // Add the number to the used list
+    usedNumbers.push(randomNumber);
+
+
+    // Save the updated list to this device/browser
+    localStorage.setItem(
+        "usedNumbers",
+        JSON.stringify(usedNumbers)
+    );
+
+
+    // Display the number
+    document.getElementById("number").textContent = randomNumber;
+
+
+    // Create QR code
+    const qrUrl =
+        "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+        + encodeURIComponent(randomNumber);
+
+
+    // Display QR code
+    const qrCode = document.getElementById("qrCode");
+
+    qrCode.src = qrUrl;
+
+    qrCode.style.display = "block";
+
+}
+
+</script>
