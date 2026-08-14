@@ -1,72 +1,192 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
 
-function generateQR() {
+<head>
 
-    // Get previously used numbers from this device/browser
-    let usedNumbers = JSON.parse(
-        localStorage.getItem("usedNumbers")
-    ) || [];
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kovela Jewellers - Random QR</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+
+            width: 320px;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #555;
+        }
+
+        #number {
+            font-size: 60px;
+
+            font-weight: bold;
+
+            margin: 25px 0;
+        }
+
+        #qrCode {
+            width: 250px;
+            height: 250px;
+
+            display: none;
+
+            margin: 20px auto;
+        }
+
+        button {
+            background: #007bff;
+
+            color: white;
+
+            border: none;
+
+            padding: 14px 25px;
+
+            font-size: 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+    </style>
+
+</head>
 
 
-    // Check if all 20 numbers have already been used
-    if (usedNumbers.length >= 20) {
+<body>
 
-        alert("All numbers from 0 to 19 have already been used on this device.");
+    <div class="container">
 
-        return;
-    }
+        <h1>Kovela Jewellers</h1>
+
+        <p class="description">
+            Generate your random number
+        </p>
+
+        <div id="number">?</div>
+
+        <img
+            id="qrCode"
+            alt="QR Code"
+        >
+
+        <button onclick="generateQR()">
+            Generate QR
+        </button>
+
+    </div>
 
 
-    // Create a list of numbers that have NOT been used
-    let availableNumbers = [];
+    <script>
 
-    for (let i = 0; i < 20; i++) {
+        function generateQR() {
 
-        if (!usedNumbers.includes(i)) {
+            // Get numbers already used on this browser/device
+            let usedNumbers = JSON.parse(
+                localStorage.getItem("usedNumbers")
+            ) || [];
 
-            availableNumbers.push(i);
+
+            // If all 20 numbers have been used
+            if (usedNumbers.length >= 20) {
+
+                alert(
+                    "All numbers from 0 to 19 have already been used on this device."
+                );
+
+                return;
+            }
+
+
+            // Create list of numbers that have NOT been used
+            let availableNumbers = [];
+
+            for (let i = 0; i < 20; i++) {
+
+                if (!usedNumbers.includes(i)) {
+
+                    availableNumbers.push(i);
+
+                }
+
+            }
+
+
+            // Pick a random number from available numbers
+            const randomIndex = Math.floor(
+                Math.random() * availableNumbers.length
+            );
+
+            const randomNumber =
+                availableNumbers[randomIndex];
+
+
+            // Save number as used
+            usedNumbers.push(randomNumber);
+
+            localStorage.setItem(
+                "usedNumbers",
+                JSON.stringify(usedNumbers)
+            );
+
+
+            // Display the number
+            document.getElementById("number").textContent =
+                randomNumber;
+
+
+            // Create QR code
+            const qrUrl =
+                "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+                + encodeURIComponent(randomNumber);
+
+
+            // Display QR code
+            const qrCode =
+                document.getElementById("qrCode");
+
+            qrCode.src = qrUrl;
+
+            qrCode.style.display = "block";
 
         }
 
-    }
+    </script>
 
+</body>
 
-    // Pick a random number from the available numbers
-    const randomIndex = Math.floor(
-        Math.random() * availableNumbers.length
-    );
-
-    const randomNumber = availableNumbers[randomIndex];
-
-
-    // Add the number to the used list
-    usedNumbers.push(randomNumber);
-
-
-    // Save the updated list to this device/browser
-    localStorage.setItem(
-        "usedNumbers",
-        JSON.stringify(usedNumbers)
-    );
-
-
-    // Display the number
-    document.getElementById("number").textContent = randomNumber;
-
-
-    // Create QR code
-    const qrUrl =
-        "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
-        + encodeURIComponent(randomNumber);
-
-
-    // Display QR code
-    const qrCode = document.getElementById("qrCode");
-
-    qrCode.src = qrUrl;
-
-    qrCode.style.display = "block";
-
-}
-
-</script>
+</html>
